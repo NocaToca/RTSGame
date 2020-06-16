@@ -23,9 +23,16 @@ public:
 	AHumanMarineUnit();
 
 	virtual void BeginPlay() override;
-
+/*******************************************************************Combat Functions*************************************************/
 	virtual void Attack(ABlanketActor* HitActor) override;
 
+	FTimerHandle FireDelay;
+
+	float FireRate = 6000.0f;
+
+/*************************************************************************************************************************************/
+
+/****************************************************************Components/Meshes****************************************************/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	UInfantryHealthComp* HealthComp;
 
@@ -38,18 +45,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	USkeletalMeshComponent* MainMesh;
 
-	FTimerHandle FireDelay;
+/***************************************************************************************************************************************/
 
-	float FireRate = 6000.0f;
-
+/****************************************************************Misc.******************************************************************/
 	FActorSpawnParameters SpawnParams;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AWeaponComponent> StarterWeaponClass;
 
-
+/****************************************************************************************************************************************/
 
 protected:
+
+	void RotateToVictim(ABlanketActor* HitActor);
 
 	
 

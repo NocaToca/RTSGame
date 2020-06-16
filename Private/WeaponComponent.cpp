@@ -13,7 +13,7 @@ AWeaponComponent::AWeaponComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	
-
+	//Creating a setting the weapon mesh as the root component
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	RootComponent = WeaponMesh;
 
@@ -30,6 +30,7 @@ void AWeaponComponent::BeginPlay()
 	
 }
 
+//Plays each effect of the weapon, if the effect is actually there
 void AWeaponComponent::Fire(){
 
  	//Muzzle effect, like a flash

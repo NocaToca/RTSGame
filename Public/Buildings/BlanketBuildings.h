@@ -18,13 +18,14 @@ class SAMPLE_API ABlanketBuildings : public ABlanketActor
 
 public:
 
+/*******************************************************Interacting with the player controller*****************************************/
 	//The function to restrict movement
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	void RestictMovement(ASamplePlayerController* PlayerController);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Click")
 	ASamplePlayerController* CurrentPlayerController;
-
+/***************************************************************************************************************************************/
 	
 
 

@@ -31,6 +31,11 @@ void ABlanketActor::Tick(float DeltaTime)
 
 }
 
+//This function basically does a bunch of casting to determine the object type. It should never return -1
+/*Object Types:
+Building = 0
+Unit = 1
+*/
 int32 ABlanketActor::ObjectType(ABlanketActor* Object){
 
 	UE_LOG(LogTemp, Warning, TEXT("Ref011"));

@@ -22,18 +22,32 @@ public:
 	//The overidden function for ClickedOnBuilding
 	virtual void ClickedOnBuilding(ASamplePlayerController* PlayerController) override;
 
+/*****************************************************Spawning and interacting*************************************************************/
 	UFUNCTION(BlueprintCallable, Category = "Units")
-	void CreateMarineUnit();
+	void CreateMarineUnit(); //The function that is called to create a marine unit
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")
-	TSubclassOf<AHumanMarineUnit> StarterMarineClass;
+	TSubclassOf<AHumanMarineUnit> StarterMarineClass; //The marine class that the building will be making
 
-	FActorSpawnParameters SpawnParams;
+	FActorSpawnParameters SpawnParams; //The spawning params
 
+/*******************************************************************************************************************************************/
+
+/*************************************************************Composition for the building**************************************************/
 	//The skeletal mesh for things
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Mesh")
 	USkeletalMeshComponent* MeshComp;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Size")
+	float BuildingX;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Size")
+	float BuildingY;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Size")
+	float BuildingZ;
+
+/********************************************************************************************************************************************/
 	
 protected:
 	// Called when the game starts or when spawned

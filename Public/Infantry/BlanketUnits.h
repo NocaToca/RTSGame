@@ -16,6 +16,11 @@ class SAMPLE_API ABlanketUnits : public ABlanketActor
 	
 public:
 
+	virtual void BeginPlay() override;
+
+	ABlanketUnits();
+
+/*********************************************Combat Variables/Functions*************************************************/
 	float BaseDamage = 1.0f;
 
 	float DamageVariance = .5f;
@@ -24,12 +29,11 @@ public:
 
 	float CalculateDamage();
 
-	virtual void BeginPlay() override;
-
 	virtual void Attack(ABlanketActor* HitActor);
 
-	ABlanketUnits();
+/*************************************************************************************************************************/
 
+/********************************************************AI Functions/Variables*******************************************/
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 	
@@ -37,6 +41,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* SenseComp;
+
+/***************************************************************************************************************************/
 
 protected:
 

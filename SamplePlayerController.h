@@ -28,28 +28,24 @@ protected:
 	virtual void BeginPlay() override;
 	// End PlayerController interface
 
+/*******************************************Interacting With the Buildings and Units****************************************************/
 	ABlanketActor* SelectedActor;
 
 	void DeSelect();
 
-	ASampleCharacter* MyOwner;
-
-	/** Navigate player to the current mouse cursor location. */
-
-
-	/** Navigate player to the given world location. */
-
-
-	/** Input handlers for SetDestination action. */
-
-	void VerticleMovement(float val);
-	
-	void HorizontalMovement(float value);
-
 	void Interact();
 
 	void CommandMove();
+/****************************************************************************************************************************************/
+	
+/*******************************************************Movement Functions***************************************************************/
+	void VerticleMovement(float val);
+	
+	void HorizontalMovement(float value);
+/***********************************************************Misc.************************************************************************/
 
+	ASampleCharacter* MyOwner;
+/****************************************************************************************************************************************/
 	// void MoveCharacter();
 };
 

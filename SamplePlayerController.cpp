@@ -13,6 +13,7 @@ ASamplePlayerController::ASamplePlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	//We only need to show the mouse cursor so you can tell where you're clicking/if you're about to edge scroll
 	
 }
 
@@ -20,7 +21,7 @@ void ASamplePlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	// keep updating the destination every tick while desired
+	//we keep updating the destination every tick while desired
 	
 	
 	
@@ -30,7 +31,10 @@ void ASamplePlayerController::BeginPlay(){
 
 	Super::BeginPlay();
 
+	//Setting what pawn this player controller is controller
 	MyOwner = Cast<ASampleCharacter>(GetPawn());
+
+	//And then making sure that the cast actually worked. 
 	if(MyOwner){
 
 		UE_LOG(LogTemp, Warning, TEXT("Ref006"));
@@ -49,6 +53,7 @@ void ASamplePlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
+	//Ineracting with Buildings/Units
 	InputComponent->BindAction("Interact", IE_Released, this, &ASamplePlayerController::Interact);
 	InputComponent->BindAction("DeSelect", IE_Released, this, &ASamplePlayerController::DeSelect);
 	InputComponent->BindAction("CommandMove", IE_Released, this, &ASamplePlayerController::CommandMove);
@@ -60,6 +65,8 @@ void ASamplePlayerController::SetupInputComponent()
 	
 }
 
+//When the player right clicks, this function is ran to check what is under the cursor (by checking whats under the decal component) and then
+//Checking to see if that thing is either a building or a unit
 void ASamplePlayerController::Interact(){
 
 	// UE_LOG(LogTemp, Warning, TEXT("Click"));
@@ -84,32 +91,37 @@ void ASamplePlayerController::Interact(){
 
 	// }
 
+	//These two lines just basically get the hit result under the cursor to see what's under it
 	FHitResult Hit;
 	GetHitResultUnderCursor(ECC_Visibility, true, Hit);
 
-	if (Hit.bBlockingHit)
-	{
+	//Checking to see if the hit was actually blocking (AKA it collided with something)
+	if (Hit.bBlockingHit){
 		
 		// We hit something, move there
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.Actor->GetName());
-		ABlanketActor* ObjectInGame = Cast<ABlanketActor>(Hit.Actor);
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.Actor->GetName()); //Debug to see what we clicked on
+
+		//Checks to see if the object is something that we can interact with
+		ABlanketActor* ObjectInGame = Cast<ABlanketActor>(Hit.Actor); 
 		if(ObjectInGame){
 
+			//If it is, we return the type of the actor (See the BlanketActor code for return types) and does specific things based off of the type
 			int32 ObjectType = ObjectInGame->ObjectType(ObjectInGame);
 			if(ObjectType == 0){
-
-				UE_LOG(LogTemp, Warning, TEXT("Ref008"));
-				ObjectInGame->ClickedOnBuilding(this);
-				ChangeSelectedActor(ObjectInGame);
+				//The Object is a building
+				UE_LOG(LogTemp, Warning, TEXT("Ref008")); //Debug Line
+				ObjectInGame->ClickedOnBuilding(this); //Runs the relatively function for the building while passing in the player controller so it can
+				//Restrict its movement until the building menu is exited 
+				ChangeSelectedActor(ObjectInGame); //Changes the selected actor to the building
 
 			} else if(ObjectType == 1){
-
-				UE_LOG(LogTemp, Warning, TEXT("Ref009"));
-				ObjectInGame->ClickedOn();
-				ChangeSelectedActor(ObjectInGame);
+				//The object is a unit
+				UE_LOG(LogTemp, Warning, TEXT("Ref009")); //Debug Line
+				ObjectInGame->ClickedOn(); //The general clicked on function that doesn't need any pass ins
+				ChangeSelectedActor(ObjectInGame); //Changes the selected actor to this unit
 
 			}
-			UE_LOG(LogTemp, Warning, TEXT("Object Casted"));
+			//UE_LOG(LogTemp, Warning, TEXT("Object Casted")); //Debug Line
 			
 
 		}
@@ -117,15 +129,17 @@ void ASamplePlayerController::Interact(){
 
 }
 
+//Changes the selected actor
 void ASamplePlayerController::ChangeSelectedActor(ABlanketActor* NewSelectedActor){
 
+	//If there is already a selected actor, we have to make sure to tell it we are no longer interacting with it
 	if(SelectedActor){
 
 		SelectedActor->bClickedOn = false;
 
 	}
 	
-	SelectedActor = NewSelectedActor;
+	SelectedActor = NewSelectedActor; //Setting the selected actor to the new actor
 
 }
 
@@ -135,6 +149,7 @@ void ASamplePlayerController::DeSelect(){
 
 }
 
+//Activates when the player holds down W or S
 void ASamplePlayerController::VerticleMovement(float val){
 
 	//UE_LOG(LogTemp, Warning, TEXT("Ref005"));
@@ -156,6 +171,7 @@ void ASamplePlayerController::VerticleMovement(float val){
 
 }
 
+//Activates when the player holds down A or D
 void ASamplePlayerController::HorizontalMovement(float value){
 
 	//UE_LOG(LogTemp, Warning, TEXT("Ref004"));
@@ -176,22 +192,28 @@ void ASamplePlayerController::HorizontalMovement(float value){
 
 }
 
+//Commanding the selected actor to move to the spot under the mouse
 void ASamplePlayerController::CommandMove(){
 
-	UE_LOG(LogTemp, Warning, TEXT("Ref001"));
+	//UE_LOG(LogTemp, Warning, TEXT("Ref001")); //Debug Line
+
+	//Checks to see if there actually is a selected Actor and then moves the selected actor if they aren't a building
 	if(SelectedActor){
 
-		UE_LOG(LogTemp, Warning, TEXT("Ref002"));
-		int32 ActorType = SelectedActor->ObjectType(SelectedActor);
-		UE_LOG(LogTemp, Warning, TEXT("%i"), ActorType);
+		//UE_LOG(LogTemp, Warning, TEXT("Ref002")); //Debug Line
+
+		int32 ActorType = SelectedActor->ObjectType(SelectedActor); //Returns the object type
+		//UE_LOG(LogTemp, Warning, TEXT("%i"), ActorType);//Debug Line
+
+		//If the actor is not a building, we're moving it
 		if(ActorType != 0){
 
-			UE_LOG(LogTemp, Warning, TEXT("Ref003"));
-			ABlanketUnits* Unit = Cast<ABlanketUnits>(SelectedActor);
+			//UE_LOG(LogTemp, Warning, TEXT("Ref003")); //Debug Line
+			ABlanketUnits* Unit = Cast<ABlanketUnits>(SelectedActor);//We cast it to a unit function so we can move it
 
-			FVector DecalPos = MyOwner->GetCursorToWorld()->GetComponentLocation();
+			FVector DecalPos = MyOwner->GetCursorToWorld()->GetComponentLocation(); //Getting the decal location
 
-			Unit->MoveUnit(FVector(DecalPos.X, DecalPos.Y, DecalPos.Z));
+			Unit->MoveUnit(DecalPos); //Moving the unit to the decal location
 
 		}
 

@@ -18,12 +18,12 @@ public:
 	// Sets default values for this component's properties
 	AWeaponComponent();
 
-	void Fire();
+	void Fire(); //The independent Fire function that plays all the weapon effects
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
+/***************************************************Weapon Composition and Effects******************************************************/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	USkeletalMeshComponent* WeaponMesh;
 
@@ -42,9 +42,13 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Sockets")
 	FName MuzzleSocketName = "WeaponSocket";
+/*******************************************************************************************************************************************/
+
+/***************************************************************Misc.***********************************************************************/
 
 	FName TracerTargetName = "Target";
 
+/*******************************************************************************************************************************************/
 public:	
 	// Called every frame
 

@@ -32,23 +32,24 @@ void UBlanketHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
+//A simple function that takes in the damage and then based off of that damage checks to see if the unit died
 void UBlanketHealthComponent::TakeDamage(float damage){
 
 	
 
 	if(damage == 0){
-
+		//If the damage is 0, we dont need to do anything
 		return;
 
 	} else if(UnitHealth - damage <= 0){
-
+		//If the unit is going to die, set it's health to zero and then run the death function (to be implemented)
 		UnitHealth = 0;
-		UE_LOG(LogTemp, Log, TEXT("Ded"));
+		UE_LOG(LogTemp, Log, TEXT("Ded")); //Debug Line
 		return;
 
 	} else {
-
-		UE_LOG(LogTemp, Warning, TEXT("%f"), damage);
+		//Just take damage equal to the damage otherwise
+		UE_LOG(LogTemp, Warning, TEXT("%f"), damage);//Debug Line
 		UnitHealth -= damage;
 		return;
 

@@ -15,12 +15,13 @@ class SAMPLE_API ABlanketActor : public APawn
 public:	
 	// Sets default values for this actor's properties
 	ABlanketActor();
+
+/****************************************************Interaction Functions*************************************************************************/
 	virtual void ClickedOn() {UE_LOG(LogTemp, Log, TEXT("Clicked!"));}; //Normal clicked on Function for everything but buildings
 
 	//Buildings need to restict the player's movement while it their UI, so they need the player controller
 	virtual void ClickedOnBuilding(ASamplePlayerController* PlayerController){UE_LOG(LogTemp, Log, TEXT("Clicked!"));};
 
-	
 	//The clicked on boolean (called in blueprints so the UIs work)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Click")
 	bool bClickedOn = false;
@@ -28,13 +29,16 @@ public:
 	//The clicked on function that returns the boolean (called in blueprints so the UIs work)
 	UFUNCTION(BlueprintCallable, Category = "Building")
 	bool IsClickedOn() { return bClickedOn; };
-	
+/*************************************************************************************************************************************************/
+
+/*********************************************************************Misc.***********************************************************************/
 
 	//0 for buildings, 1 for infantry
 	int32 ObjectType(ABlanketActor* Object);
 
 	bool bHasHealthComp = false;
 
+/*************************************************************************************************************************************************/
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
