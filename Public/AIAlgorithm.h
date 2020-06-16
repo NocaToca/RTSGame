@@ -4,29 +4,29 @@
 
 #include "CoreMinimal.h"
 
-USTRUCT()
-struct FVectorValues{
+// USTRUCT()
+// struct FVectorValues{
 
 
-public:
+// public:
 
-	UPROPERTY()
-	FVector CurrentVector;
+// 	UPROPERTY()
+// 	FVector CurrentVector;
 
-	UPROPERTY()
-	float PathWeight = 0.0f;
+// 	UPROPERTY()
+// 	float PathWeight = 0.0f;
 
-	UPROPERTY()
-	float Distance = 0.0f;
+// 	UPROPERTY()
+// 	float Distance = 0.0f;
 
-	UPROPERTY()
-	float OverallWeight = 0.0f;
+// 	UPROPERTY()
+// 	float OverallWeight = 0.0f;
 
-	UPROPERTY()
-	FVector PreviousVector;
+// 	UPROPERTY()
+// 	FVector PreviousVector;
 
-};
-
+// };
+class FVectorValues;
 class AActor;
 /**
  * 
@@ -39,10 +39,10 @@ public:
 
 	TArray<FVector> PathfindingArray;
 
-	void Pathfind(AActor* Actor, FVector Destination);
+	void Pathfind(AActor* Actor, FVector Destination, UWorld World);
 
-	float RayTrace(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor);
+	float RayTrace(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, UWorld World);
 
-	bool RayTraceExtended(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight);
+	float RayTraceExtended(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld World);
 
 };
