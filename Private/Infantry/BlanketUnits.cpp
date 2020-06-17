@@ -5,6 +5,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "BlanketActor.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "AIAlgorithm.h"
 
 
 ABlanketUnits::ABlanketUnits(){
@@ -24,9 +25,11 @@ void ABlanketUnits::BeginPlay()
 }
 
 //Currently a bare-bones function of teleporting the actor to the location
-void ABlanketUnits::MoveUnit(FVector WhereToMove){
+void ABlanketUnits::MoveUnit(FVector WhereToMove, UWorld* Worldz){
 
-    SetActorLocation(WhereToMove, false);
+    //SetActorLocation(WhereToMove, false);
+
+    algorithms->Pathfind(this, WhereToMove, Worldz);
 
 }
 

@@ -8,6 +8,7 @@
 
 class UPawnSensingComponent;
 class ABlanketActor;
+class  AIAlgorithm;
 UCLASS()
 class SAMPLE_API ABlanketUnits : public ABlanketActor
 {
@@ -37,14 +38,17 @@ public:
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 	
-	void MoveUnit(FVector WhereToMove);
+	void MoveUnit(FVector WhereToMove, UWorld* Worldz);
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* SenseComp;
 
+	AIAlgorithm* algorithms; 
+
 /***************************************************************************************************************************/
 
 protected:
+
 
 	
 

@@ -39,10 +39,16 @@ public:
 
 	TArray<FVector> PathfindingArray;
 
-	void Pathfind(AActor* Actor, FVector Destination, UWorld World);
+	
 
-	float RayTrace(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, UWorld World);
+	FORCEINLINE void Pathfind(AActor* Actor, FVector Destination, UWorld* World);
 
-	float RayTraceExtended(FVector StartingVector, float Increments, TArray<FVectorValues> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld World);
+	float RayTrace(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, UWorld* World);
+
+	float RayTraceExtended(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld* World, float NumberOfPaths, FVector MainStartingVector);
+
+	bool FVectorEstimate(FVector LocationOne, FVector LocationTwo, float Threshold);
+
+	void VectorPathing(TArray<FVector> VectorPath, TArray<FVectorValues> AllVectors, FVectorValues EndingVector, UWorld* Worldz, FVector StartingVector);
 
 };
