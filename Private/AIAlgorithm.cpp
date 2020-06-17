@@ -45,10 +45,10 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
 
     float Distance = FVector::Dist(StartLocation, Destination);
 
-    float IncrementalDistance = Distance/10.0f;
+    float IncrementalDistance = Distance/50.0f;
 
     TArray<FVector> VectorPath;
-    FVectorValues StartingVector(StartLocation, 0.0f, Distance, Distance, StartLocation);
+    FVectorValues StartingVector(StartLocation, 0.0f, Distance, Distance, StartLocation, true);
     //VectorPath.Add(StartingVector);
 
     TArray<FVectorValues> AllVectors;
@@ -63,10 +63,10 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
 
 float AIAlgorithm::RayTrace(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, UWorld* Worldz){
 
-    FRotator ForwardVector(0, 90, 0);
-    FRotator LeftVector = FRotator(0, 180, 0);
-    FRotator BehindVector(0, 270, 0);
-    FRotator RightVector(0, 360, 0);
+    FRotator RightVector(0, 90, 0);
+    FRotator BehindVector = FRotator(0, 180, 0);
+    FRotator LeftVector(0, 270, 0);
+    FRotator ForwardVector(0, 360, 0);
 
     UE_LOG(LogTemp, Log, TEXT("Increments: %f"), Increments);
 
@@ -84,19 +84,17 @@ float AIAlgorithm::RayTrace(FVector StartingVector, float Increments, TArray<FVe
 	QueryParams.AddIgnoredActor(MovingActor); 
 	QueryParams.bTraceComplex = true; 
 
-
-
     if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
-
-        FVectorValues Front = FVectorValues(TraceEndForward, Increments, RAND_MAX, RAND_MAX, StartingVector);
+        float ForwardDistance = FVector::Dist(TraceEndForward, Destination)/100.0f;
+        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector, true);
         AllVectors.Add(Front);
         DrawDebugLine(Worldz, StartingVector, TraceEndForward, FColor::Blue, true, 10.0f, 10, 10.0f);
-        UE_LOG(LogTemp, Warning, TEXT("Front Collided"));
+        
 
     } else {
 
-        float ForwardDistance = FVector::Dist(TraceEndForward, Destination);
-        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector);
+        float ForwardDistance = FVector::Dist(TraceEndForward, Destination)/100.0f;
+        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector, false);
         AllVectors.Add(Front);
         UE_LOG(LogTemp, Log, TEXT("Foward Vector: %s"), *TraceEndForward.ToString());
         DrawDebugLine(Worldz, StartingVector, TraceEndForward, FColor::Red, true, 10.0f, 10, 10.0f);
@@ -105,57 +103,53 @@ float AIAlgorithm::RayTrace(FVector StartingVector, float Increments, TArray<FVe
 
 
     if(Worldz->LineTraceSingleByChannel(HitLeft, StartingVector, TraceEndLeft, ECC_Visibility, QueryParams)){
-        
-        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, RAND_MAX, RAND_MAX, StartingVector);
+        float LeftDistance = FVector::Dist(TraceEndLeft, Destination)/100.0f;
+        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector, true);
         AllVectors.Add(Left);
         DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Blue, true, 10.0f, 10, 10.0f);
-        UE_LOG(LogTemp, Warning, TEXT("Left Collided"));
 
     } else {
 
-        float LeftDistance = FVector::Dist(TraceEndLeft, Destination);
-        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector);
+        float LeftDistance = FVector::Dist(TraceEndLeft, Destination)/100.0f;
+        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector, false);
         AllVectors.Add(Left);
         UE_LOG(LogTemp, Log, TEXT("Left Vector: %s"), *TraceEndLeft.ToString());
-        DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Yellow, true, 10.0f, 10, 10.0f);
     }
 
 
 
-    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
-
-        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, RAND_MAX, RAND_MAX, StartingVector);
+    if(Worldz->LineTraceSingleByChannel(HitBehind, StartingVector, TraceEndBehind, ECC_Visibility, QueryParams)){
+        float BackDistance = FVector::Dist(TraceEndBehind, Destination)/100.0f;
+        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector, true);
         AllVectors.Add(Behind);
         DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Blue, true, 10.0f, 10, 10.0f);
-        UE_LOG(LogTemp, Warning, TEXT("Behind Collided"));
 
     } else {
 
-        float BackDistance = FVector::Dist(TraceEndBehind, Destination);
-        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector);
+        float BackDistance = FVector::Dist(TraceEndBehind, Destination)/100.0f;
+        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector, false);
         AllVectors.Add(Behind);
         UE_LOG(LogTemp, Log, TEXT("Behind Vector: %s"), *TraceEndBehind.ToString());
         //FVector DebugBehind = FVector(TraceEndBehind.X, TraceEndBehind.Y, TraceEndBehind.Z + 50.0f);
-        DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Magenta, true, 10.0f, 10, 10.0f);
     }
 
 
 
-    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
-
-        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RAND_MAX, RAND_MAX, StartingVector);
+    if(Worldz->LineTraceSingleByChannel(HitRight, StartingVector, TraceEndRight, ECC_Visibility, QueryParams)){
+        float RightDistance = FVector::Dist(TraceEndRight, Destination)/100.0f;
+        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector, true);
         AllVectors.Add(Right);
         DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Blue, true, 10.0f, 10, 10.0f);
-        UE_LOG(LogTemp, Warning, TEXT("Right Collided"));
 
     } else {
 
-        float RightDistance = FVector::Dist(TraceEndRight, Destination);
-        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector);
+        float RightDistance = FVector::Dist(TraceEndRight, Destination)/100.0f;
+        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector, false);
         AllVectors.Add(Right);
-
         UE_LOG(LogTemp, Log, TEXT("Right Vector: %s"), *TraceEndRight.ToString());
-        DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Cyan, true, 10.0f, 10, 10.0f);
     }
 
 
@@ -164,26 +158,36 @@ float AIAlgorithm::RayTrace(FVector StartingVector, float Increments, TArray<FVe
 
 
     float MinWeight = RAND_MAX;
-    int32 IndexOfVector = 0;
+    int32 IndexOfVector = -1;
     float MinPathWeight = RAND_MAX;
     int32 IndexOfMainPath = 0;
     float CheckFullPath = 0.0f;
+
+    UE_LOG(LogTemp, Warning, TEXT("First Vector: %s"), *AllVectors.Last(0).CurrentVector.ToString());
 
     for(int32 i = 0; i < 4; i++){
         for(int32 k = 0; k < AllVectors.Num(); k++){
 
             if(AllVectors.Last(k).OverallWeight < MinWeight){
 
-                MinWeight = AllVectors.Last(k).OverallWeight;
-                IndexOfVector = k;
+                UE_LOG(LogTemp, Log, TEXT("AllVectors size: %i"), AllVectors.Num());
+                UE_LOG(LogTemp, Warning, TEXT("Chosen Vector: %s"), *AllVectors.Last(k).CurrentVector.ToString());
+                if(!AllVectors.Last(k).bDidCollide){
+
+                    MinWeight = AllVectors.Last(k).OverallWeight;
+                    IndexOfVector = k;
+
+                }
+                
+                
 
             }
 
         }
 
-        if(IndexOfVector != 0){
+        if(IndexOfVector != -1){
             
-            CheckFullPath = RayTraceExtended(AllVectors.Last(IndexOfVector).CurrentVector, Increments, VectorPath, Destination, AllVectors, MovingActor, AllVectors.Last(IndexOfVector).OverallWeight, AllVectors.Last(IndexOfVector).PathWeight, Worldz, 1.0f, StartingVector);
+            CheckFullPath = RayTraceExtended(AllVectors.Last(IndexOfVector).CurrentVector, Increments, VectorPath, Destination, AllVectors, MovingActor, AllVectors.Last(IndexOfVector).OverallWeight, AllVectors.Last(IndexOfVector).PathWeight, Worldz, 1.0f, StartingVector, AllVectors.Last(IndexOfVector).PreviousVector);
 
             if(CheckFullPath < MinPathWeight){
 
@@ -207,26 +211,27 @@ float AIAlgorithm::RayTrace(FVector StartingVector, float Increments, TArray<FVe
 
 }
 
-float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld* Worldz, float NumberOfPaths, FVector MainStartingVector){
+float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld* Worldz, float NumberOfPaths, FVector MainStartingVector, FVector PreviousVector){
 
     UE_LOG(LogTemp, Warning, TEXT("Paths: %f"), NumberOfPaths);
 
-    if(FVectorEstimate(StartingVector, Destination, NumberOfPaths)){
+    if(FVectorEstimate(StartingVector, Destination, 10.0f)){
 
         //VectorPathing(VectorPath, AllVectors, AllVectors.Last(AllVectors.Num()-1), Worldz, MainStartingVector);
         return PathWeight;
 
-    } else if(NumberOfPaths >= 100){
+    } else if(NumberOfPaths >= 1000){
 
+        DrawDebugLine(Worldz, StartingVector, MainStartingVector, FColor::Orange, true, 10.0f, 15, 5.0f);
         //VectorPathing(VectorPath, AllVectors, AllVectors.Last(AllVectors.Num()-1), Worldz, MainStartingVector);
         return PathWeight;
 
     }
 
-    FRotator ForwardVector(0, 90, 0);
-    FRotator LeftVector = FRotator(0, 180, 0);
-    FRotator BehindVector(0, 270, 0);
-    FRotator RightVector(0, 360, 0);
+    FRotator RightVector(0, 90, 0);
+    FRotator BehindVector = FRotator(0, 180, 0);
+    FRotator LeftVector(0, 270, 0);
+    FRotator ForwardVector(0, 360, 0);
 
     FVector TraceEndForward = StartingVector + (ForwardVector.Vector() * Increments);
     FVector TraceEndLeft = StartingVector + (LeftVector.Vector() * Increments);
@@ -243,16 +248,19 @@ float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TA
 	QueryParams.bTraceComplex = true; 
 
 
-    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
 
-        FVectorValues Front = FVectorValues(TraceEndForward, Increments, RAND_MAX, RAND_MAX, StartingVector);
+    
+    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
+        float ForwardDistance = FVector::Dist(TraceEndForward, Destination)/100.0f;
+        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector, true);
         AllVectors.Add(Front);
         DrawDebugLine(Worldz, StartingVector, TraceEndForward, FColor::Blue, true, 10.0f, 10, 10.0f);
+        
 
     } else {
 
-        float ForwardDistance = FVector::Dist(TraceEndForward, Destination);
-        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector);
+        float ForwardDistance = FVector::Dist(TraceEndForward, Destination)/100.0f;
+        FVectorValues Front = FVectorValues(TraceEndForward, Increments, ForwardDistance, Increments + ForwardDistance, StartingVector, false);
         AllVectors.Add(Front);
         UE_LOG(LogTemp, Log, TEXT("Foward Vector: %s"), *TraceEndForward.ToString());
         DrawDebugLine(Worldz, StartingVector, TraceEndForward, FColor::Red, true, 10.0f, 10, 10.0f);
@@ -261,54 +269,53 @@ float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TA
 
 
     if(Worldz->LineTraceSingleByChannel(HitLeft, StartingVector, TraceEndLeft, ECC_Visibility, QueryParams)){
-        
-        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, RAND_MAX, RAND_MAX, StartingVector);
+        float LeftDistance = FVector::Dist(TraceEndLeft, Destination)/100.0f;
+        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector, true);
         AllVectors.Add(Left);
         DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Blue, true, 10.0f, 10, 10.0f);
 
     } else {
 
-        float LeftDistance = FVector::Dist(TraceEndLeft, Destination);
-        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector);
+        float LeftDistance = FVector::Dist(TraceEndLeft, Destination)/100.0f;
+        FVectorValues Left = FVectorValues(TraceEndLeft, Increments, LeftDistance, Increments + LeftDistance, StartingVector, false);
         AllVectors.Add(Left);
         UE_LOG(LogTemp, Log, TEXT("Left Vector: %s"), *TraceEndLeft.ToString());
-        DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndLeft, FColor::Yellow, true, 10.0f, 10, 10.0f);
     }
 
 
 
-    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
-
-        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, RAND_MAX, RAND_MAX, StartingVector);
+    if(Worldz->LineTraceSingleByChannel(HitBehind, StartingVector, TraceEndBehind, ECC_Visibility, QueryParams)){
+        float BackDistance = FVector::Dist(TraceEndBehind, Destination)/100.0f;
+        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector, true);
         AllVectors.Add(Behind);
         DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Blue, true, 10.0f, 10, 10.0f);
 
     } else {
 
-        float BackDistance = FVector::Dist(TraceEndBehind, Destination);
-        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector);
+        float BackDistance = FVector::Dist(TraceEndBehind, Destination)/100.0f;
+        FVectorValues Behind = FVectorValues(TraceEndBehind, Increments, BackDistance, Increments + BackDistance, StartingVector, false);
         AllVectors.Add(Behind);
         UE_LOG(LogTemp, Log, TEXT("Behind Vector: %s"), *TraceEndBehind.ToString());
         //FVector DebugBehind = FVector(TraceEndBehind.X, TraceEndBehind.Y, TraceEndBehind.Z + 50.0f);
-        DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndBehind, FColor::Magenta, true, 10.0f, 10, 10.0f);
     }
 
 
 
-    if(Worldz->LineTraceSingleByChannel(HitForward, StartingVector, TraceEndForward, ECC_Visibility, QueryParams)){
-
-        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RAND_MAX, RAND_MAX, StartingVector);
+    if(Worldz->LineTraceSingleByChannel(HitRight, StartingVector, TraceEndRight, ECC_Visibility, QueryParams)){
+        float RightDistance = FVector::Dist(TraceEndRight, Destination)/100.0f;
+        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector, true);
         AllVectors.Add(Right);
         DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Blue, true, 10.0f, 10, 10.0f);
 
     } else {
 
-        float RightDistance = FVector::Dist(TraceEndRight, Destination);
-        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector);
+        float RightDistance = FVector::Dist(TraceEndRight, Destination)/100.0f;
+        FVectorValues Right = FVectorValues(TraceEndRight, Increments, RightDistance, Increments + RightDistance, StartingVector, false);
         AllVectors.Add(Right);
-
         UE_LOG(LogTemp, Log, TEXT("Right Vector: %s"), *TraceEndRight.ToString());
-        DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Red, true, 10.0f, 10, 10.0f);
+        DrawDebugLine(Worldz, StartingVector, TraceEndRight, FColor::Cyan, true, 10.0f, 10, 10.0f);
     }
 
 
@@ -318,10 +325,11 @@ float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TA
    
 
     float MinWeight = RAND_MAX;
-    int32 IndexOfVector = 0;
+    int32 IndexOfVector = -1;
     float MinPathWeight = RAND_MAX;
     int32 IndexOfMainPath = 0;
     float CheckFullPath = 0.0f;
+    bool bIsPreviousVector = false;
     
 
     for(int32 i = 0; i < 4; i++){
@@ -329,22 +337,46 @@ float AIAlgorithm::RayTraceExtended(FVector StartingVector, float Increments, TA
 
             if(AllVectors.Last(k).OverallWeight < MinWeight){
 
-                MinWeight = AllVectors.Last(k).OverallWeight;
-                IndexOfVector = k;
+                if(!AllVectors.Last(k).bDidCollide){
+                    if(PreviousVector != AllVectors.Last(k).CurrentVector){
+
+                        MinWeight = AllVectors.Last(k).OverallWeight;
+                        IndexOfVector = k;
+
+                    } else {
+
+
+
+                    }
+
+                }
 
             }
 
         }
 
-        if(IndexOfVector != 0){
+        if(IndexOfVector != -1){
             
-            CheckFullPath = RayTraceExtended(AllVectors.Last(IndexOfVector).CurrentVector, Increments, VectorPath, Destination, AllVectors, MovingActor, AllVectors.Last(IndexOfVector).OverallWeight + PathWeight, AllVectors.Last(IndexOfVector).PathWeight, Worldz, NumberOfPaths + 1.0f, MainStartingVector);
+            VectorPath.Add(AllVectors.Last(IndexOfVector).CurrentVector);
+            if(PreviousVector == AllVectors.Last(IndexOfVector).CurrentVector){
 
+                FVector NewPath = FindLastVectorInDirection(Find2DDirection(PreviousVector, AllVectors.Last(IndexOfVector).CurrentVector), VectorPath, Increments);
+                CheckFullPath = RayTraceExtended(NewPath, Increments, VectorPath, Destination, AllVectors, MovingActor, 0.0f, 0.0f, Worldz, NumberOfPaths + 1.0f, MainStartingVector, PreviousVector);
+
+            } else {
+
+                CheckFullPath = RayTraceExtended(AllVectors.Last(IndexOfVector).CurrentVector, Increments, VectorPath, Destination, AllVectors, MovingActor, AllVectors.Last(IndexOfVector).OverallWeight + PathWeight, AllVectors.Last(IndexOfVector).PathWeight, Worldz, NumberOfPaths + 1.0f, MainStartingVector, AllVectors.Last(IndexOfVector).PreviousVector);
+
+
+            }
+
+            
             if(CheckFullPath < MinPathWeight){
 
                 IndexOfMainPath = i;
                 MinPathWeight = CheckFullPath;
                 DrawDebugLine(Worldz, AllVectors.Last(IndexOfVector).CurrentVector, StartingVector, FColor::Green, true, 10.0f, 15, 10.0f);
+                
 
             }
 
@@ -428,5 +460,59 @@ void AIAlgorithm::VectorPathing(TArray<FVector> VectorPath, TArray<FVectorValues
         DrawDebugLine(Worldz, VectorPath.Last(k), VectorPath.Last(k-1), FColor::Green, true, 10.0f, 15, 10.0f);
 
     }
+
+}
+
+FRotator AIAlgorithm::Find2DDirection(FVector FirstVector, FVector PreviousVector){
+
+    float LocOneX = FirstVector.X;
+    float LocOneY = FirstVector.Y;
+    
+    float LocTwoX = PreviousVector.X;
+    float LocTwoY = PreviousVector.Y;
+ 
+    if(LocOneX - LocTwoX == 0){
+        if(LocOneY - LocTwoY > 0){
+            return FRotator(0, 90, 0);
+
+        } else {
+            return FRotator(0, 270, 0);
+
+        }
+
+
+    }
+
+    if(LocTwoY - LocOneY == 0){
+        if(LocOneX - LocTwoX > 0){
+            return FRotator(0, 360, 0);
+
+        } else {
+            return FRotator(0, 180, 0);
+
+        }
+
+
+    }
+    return FRotator::ZeroRotator;
+
+}
+
+FVector AIAlgorithm::FindLastVectorInDirection(FRotator Direction, TArray<FVector> VectorPath, float Increments){
+
+    FVector RotationVector = Direction.Vector();
+
+    for(int32 i = 1; i < VectorPath.Num(); i++){
+
+        FVector CheckVector = VectorPath.Last(i-1) + (RotationVector * Increments);
+        if(CheckVector != VectorPath.Last(i)){
+
+            return CheckVector;
+
+        }
+
+    }
+
+    return VectorPath.Last(0);
 
 }

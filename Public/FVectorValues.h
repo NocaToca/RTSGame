@@ -10,7 +10,7 @@
 class SAMPLE_API FVectorValues
 {
 public:
-	FVectorValues(FVector CurrentVecto, float PathWeigh, float Distanc, float OverallWeigh, FVector PreviousVecto);
+	FVectorValues(FVector CurrentVecto, float PathWeigh, float Distanc, float OverallWeigh, FVector PreviousVecto, bool bDidCollid);
 	~FVectorValues();
 
 	UPROPERTY()
@@ -27,4 +27,7 @@ public:
 
 	UPROPERTY()
 	FVector PreviousVector;
+
+	UPROPERTY()
+	bool bDidCollide;
 };

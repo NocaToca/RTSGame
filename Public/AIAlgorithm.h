@@ -45,10 +45,14 @@ public:
 
 	float RayTrace(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, UWorld* World);
 
-	float RayTraceExtended(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld* World, float NumberOfPaths, FVector MainStartingVector);
+	float RayTraceExtended(FVector StartingVector, float Increments, TArray<FVector> VectorPath, FVector Destination, TArray<FVectorValues> AllVectors, AActor* MovingActor, float PathWeight, float IncrementWeight, UWorld* World, float NumberOfPaths, FVector MainStartingVector, FVector PreviousVector);
 
 	bool FVectorEstimate(FVector LocationOne, FVector LocationTwo, float Threshold);
 
 	void VectorPathing(TArray<FVector> VectorPath, TArray<FVectorValues> AllVectors, FVectorValues EndingVector, UWorld* Worldz, FVector StartingVector);
+
+	FVector FindLastVectorInDirection(FRotator Direction, TArray<FVector> VectorPath, float Increments);
+	
+	FRotator Find2DDirection(FVector FirstVector, FVector PreviousVector);
 
 };
