@@ -26,12 +26,14 @@ public:
 	float f = 0.0f;
 
 	// UPROPERTY()
-	FVector PreviousVector;
+	//FVector PreviousVector;
 
 	UPROPERTY()
 	bool bDidCollide;
 
 	bool bHasPrevious = false;
+
+	FVectorValues* PreviousPoint;
 
 	void AddNeighbors(FVector Neighbor);
 

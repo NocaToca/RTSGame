@@ -93,6 +93,22 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
             break;
 
         } else if(!Worldz->LineTraceSingleByChannel(TestObstacles, CurrentVector.CurrentVector, Destination, ECC_Visibility, QueryParams)){
+            FVectorValues Temp = CurrentVector;
+
+
+            int32 Check = 0;
+            VectorPath.Add(Temp.CurrentVector);
+            while(Temp.bHasPrevious && Check < 2){
+
+                    
+                Check++;
+
+            }
+            if(Check == 2){
+
+                UE_LOG(LogTemp, Error, TEXT("Check Died"));
+
+            }
 
             for(int32 i = 1; i < VectorPath.Num(); i++){
 
@@ -134,12 +150,6 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
         FHitResult HitLeft;
         FHitResult HitBehind;
         FHitResult HitRight;
-
-        for(int i = VectorPath.Num()-1; i >= 0; i--){
-
-            VectorPath.RemoveAt(i);
-
-        }
 
         
 
@@ -304,38 +314,15 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
 
                 }
 
-                OpenVectors.Last(OpenVectors.Num()-1).PreviousVector = CurrentVector.CurrentVector;
+                OpenVectors.Last(OpenVectors.Num()-1).PreviousPoint = CurrentVector;
                 
                 FVector Temp = OpenVectors.Last(OpenVectors.Num()-1).CurrentVector;
 
                 OpenVectors.Last(OpenVectors.Num()-1).bHasPrevious = true;
                 FVectorValues TempOne = OpenVectors.Last(OpenVectors.Num()-1);
 
-                int32 Check = 0;
-                VectorPath.Add(Temp);
-                while(TempOne.bHasPrevious && Check < 2){
-
-                    VectorPath.Add(TempOne.PreviousVector);
-                    for(int32 i = 0; i < ClosedVectors.Num(); i++){
-
-                        if(ClosedVectors.Last(i).CurrentVector == Temp){
-
-                            Check = 0;
-                            Temp = ClosedVectors.Last(i).PreviousVector;
-                            TempOne = ClosedVectors.Last(i);
-                            
-
-                        }
-
-                    }
-                    Check++;
-
-                }
-                if(Check == 2){
-
-                    UE_LOG(LogTemp, Error, TEXT("Check Died"));
-
-                }
+                
+                
 
                 
 
