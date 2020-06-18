@@ -213,7 +213,7 @@ void ASamplePlayerController::CommandMove(){
 
 			FVector DecalPos = MyOwner->GetCursorToWorld()->GetComponentLocation(); //Getting the decal location
 
-			Unit->MoveUnit(DecalPos); //Moving the unit to the decal location
+			Unit->MoveUnit(DecalPos, GetWorld()); //Moving the unit to the decal location
 
 		}
 

@@ -10,24 +10,47 @@
 class SAMPLE_API FVectorValues
 {
 public:
-	FVectorValues(FVector CurrentVecto, float PathWeigh, float Distanc, float OverallWeigh, FVector PreviousVecto, bool bDidCollid);
+	FVectorValues(FVector CurrentVecto, float PathWeigh, float Distanc, float OverallWeigh, bool bDidCollid);
 	~FVectorValues();
 
 	UPROPERTY()
 	FVector CurrentVector;
 
 	UPROPERTY()
-	float PathWeight = 0.0f;
+	float g = 0.0f;
 
 	UPROPERTY()
-	float Distance = 0.0f;
+	float h = 0.0f;
 
 	UPROPERTY()
-	float OverallWeight = 0.0f;
+	float f = 0.0f;
 
-	UPROPERTY()
+	// UPROPERTY()
 	FVector PreviousVector;
 
 	UPROPERTY()
 	bool bDidCollide;
+
+	bool bHasPrevious = false;
+
+	void AddNeighbors(FVector Neighbor);
+
+	inline bool operator==(const FVectorValues& rhs) const{
+		if(this->CurrentVector == rhs.CurrentVector){
+			if(this->g == rhs.g){
+				if(this->h == rhs.h){
+					if(this->f == rhs.f){
+						
+					}
+				}
+			}
+			return true;
+
+		}
+		return false;
+
+	}
+
+	
+	TArray<FVector> Neighbors;
 };
