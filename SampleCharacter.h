@@ -50,9 +50,13 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;//The component that makes the camera sit far above the player
 
+public:
+
 	/** A decal that projects to the cursor location. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UDecalComponent* CursorToWorld; //This is SOLELY for a reliable way to get the player's mouse location relative to world instead of screen
+
+private:
 
 	void SetDecalLocation(); //The function to continuously move the decal to the mouse's location
 /*****************************************************************************************************************************************************/

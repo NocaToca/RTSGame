@@ -9,7 +9,7 @@
 /**
  * 
  */
-
+class ASamplePlayerController;
 UCLASS()
 class SAMPLE_API ABlanketBuildings : public ABlanketActor
 {
@@ -25,6 +25,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Click")
 	ASamplePlayerController* CurrentPlayerController;
+/***************************************************************************************************************************************/
+
+/********************************************************Essential Building*************************************************************/
+
+ASamplePlayerController* OwningPlayer;
+
 /***************************************************************************************************************************************/
 	
 

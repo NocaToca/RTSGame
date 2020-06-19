@@ -8,6 +8,9 @@
 #include "Engine/World.h"
 #include "BlanketActor.h"
 #include "Infantry/BlanketUnits.h"
+#include "Buildings/BlanketBuildings.h"
+#include "Buildings/HumanInfantryBuilding.h"
+#include "Buildings/HumanQuintessenceBuilding.h"
 
 ASamplePlayerController::ASamplePlayerController()
 {
@@ -68,6 +71,49 @@ void ASamplePlayerController::SetupInputComponent()
 //When the player right clicks, this function is ran to check what is under the cursor (by checking whats under the decal component) and then
 //Checking to see if that thing is either a building or a unit
 void ASamplePlayerController::Interact(){
+
+	if(SelectedActor){
+
+		SelectedActor->bClickedOn = false;
+
+	}
+	
+
+	if(bBuildingBuilding){
+
+		FVector SpawningLocation = MyOwner->CursorToWorld->GetComponentLocation();
+
+		MyOwner->CursorToWorld->DecalSize = FVector::ZeroVector;
+
+		bBuildingBuilding = false;
+
+		ABlanketBuildings* Building;
+
+		if(BuildingToBuild == 0){
+
+			Building = GetWorld()->SpawnActor<AHumanQuintessenceBuilding>(HumanQuintEssenceBuilding, SpawningLocation, FRotator::ZeroRotator, SpawnParams);
+
+			if(Building){
+
+				Building->OwningPlayer = this;
+
+			}
+
+		} else if(BuildingToBuild == 1){
+
+			Building =GetWorld()->SpawnActor<AHumanInfantryBuilding>(HumanInfantryBuilding, SpawningLocation, FRotator::ZeroRotator, SpawnParams);
+
+			if(Building){
+
+				Building->OwningPlayer = this;
+
+			}
+
+		}
+
+		
+
+	}
 
 	// UE_LOG(LogTemp, Warning, TEXT("Click"));
 
@@ -145,7 +191,21 @@ void ASamplePlayerController::ChangeSelectedActor(ABlanketActor* NewSelectedActo
 
 void ASamplePlayerController::DeSelect(){
 
-	SelectedActor->bClickedOn = false;
+	if(bBuildingBuilding){
+
+		bBuildingBuilding = false;
+
+		MyOwner->CursorToWorld->DecalSize = FVector::ZeroVector;
+
+	}
+
+	if(SelectedActor){
+
+		SelectedActor->bClickedOn = false;
+		
+	}
+
+	
 
 }
 
@@ -218,5 +278,22 @@ void ASamplePlayerController::CommandMove(){
 		}
 
 	}
+
+}
+
+
+void ASamplePlayerController::BuildBuilding(int32 BuildingType){
+
+	if(SelectedActor){
+
+		SelectedActor->bClickedOn = false;
+
+	}
+
+	BuildingToBuild = BuildingType;
+
+	MyOwner->CursorToWorld->DecalSize = FVector(30.0f, 30.0f, 1.0f);
+
+	bBuildingBuilding = true;
 
 }

@@ -314,7 +314,7 @@ void AIAlgorithm::Pathfind(AActor* Actor, FVector Destination, UWorld* Worldz){
 
                 }
 
-                OpenVectors.Last(OpenVectors.Num()-1).PreviousPoint = CurrentVector;
+                OpenVectors.Last(OpenVectors.Num()-1).PreviousPoint = &CurrentVector;
                 
                 FVector Temp = OpenVectors.Last(OpenVectors.Num()-1).CurrentVector;
 

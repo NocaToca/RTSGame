@@ -7,7 +7,10 @@
 #include "SamplePlayerController.generated.h"
 
 class ABlanketActor;
+class ABlanketBuildings;
 class ASampleCharacter;
+class AHumanQuintessenceBuilding;
+class AHumanInfantryBuilding;
 UCLASS()
 class ASamplePlayerController : public APlayerController
 {
@@ -36,12 +39,36 @@ protected:
 	void Interact();
 
 	void CommandMove();
+
+	FActorSpawnParameters SpawnParams;
+
+	UFUNCTION(BlueprintCallable, Category = "Buildings")
+	void BuildBuilding(int32 BuildingType);
+	UPROPERTY(EditDefaultsOnly, Category = "Buildings")
+	TSubclassOf<AHumanQuintessenceBuilding> HumanQuintEssenceBuilding; //0 = Quintessence Building 
+	UPROPERTY(EditDefaultsOnly, Category = "Buildings")
+	TSubclassOf<AHumanInfantryBuilding> HumanInfantryBuilding; //1 = Infantry Building
+
+	int32 BuildingToBuild;
+
+	bool bBuildingBuilding = false;
 /****************************************************************************************************************************************/
 	
 /*******************************************************Movement Functions***************************************************************/
 	void VerticleMovement(float val);
 	
 	void HorizontalMovement(float value);
+/****************************************************************************************************************************************/
+
+/**********************************************************Resources*********************************************************************/
+public:
+
+	float Quintessence = 0.0f;
+
+	float Aether = 0.0f;
+private:
+/****************************************************************************************************************************************/
+
 /***********************************************************Misc.************************************************************************/
 
 	ASampleCharacter* MyOwner;
